@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Museum Radar</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIINfQ3yn5ZagEfjh6d/4Esl8GFbR86DGpY="
+    crossorigin=""
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="page-header">
+      <p class="eyebrow">Museum Radar</p>
+      <h1>Exhibition radar</h1>
+      <p class="lede">Track upcoming exhibitions, timing, and planning signals.</p>
+    </header>
+
+    <nav class="view-tabs" aria-label="Museum Radar views">
+      <button class="view-tab active" data-view="upcoming" type="button">Upcoming</button>
+      <button class="view-tab" data-view="calendar" type="button">Calendar</button>
+      <button class="view-tab" data-view="map" type="button">Map</button>
+    </nav>
+
+    <section id="upcoming-view" class="view-panel">
+      <section class="filters" aria-label="Exhibition filters">
+        <label>
+          <span>Category</span>
+          <select id="category-filter">
+            <option value="all">All categories</option>
+            <option value="Historical Fashion / Textiles">Historical Fashion / Textiles</option>
+            <option value="Ancient Cultures / Archaeology">Ancient Cultures / Archaeology</option>
+            <option value="World History">World History</option>
+            <option value="Other Relevant History">Other Relevant History</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Distance</span>
+          <select id="distance-filter">
+            <option value="all">All distances</option>
+            <option value="Philadelphia / local">Philadelphia / local</option>
+            <option value="Day trip">Day trip</option>
+            <option value="Weekend trip">Weekend trip</option>
+            <option value="Longer trip">Longer trip</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Status</span>
+          <select id="status-filter">
+            <option value="all">All statuses</option>
+            <option value="unreviewed">Unreviewed</option>
+            <option value="tickets">Tickets available</option>
+            <option value="interested">Interested</option>
+            <option value="planning">Planning</option>
+            <option value="attended">Attended</option>
+            <option value="attention">Changed / attention</option>
+            <option value="closing">Closing soon</option>
+          </select>
+        </label>
+
+        <button id="clear-filters" type="button">Clear filters</button>
+      </section>
+
+      <section id="status" class="status" aria-live="polite">Loading exhibitions…</section>
+      <section id="exhibition-list" class="exhibition-list" aria-label="Upcoming exhibitions"></section>
+    </section>
+
+    <section id="calendar-view" class="view-panel" hidden>
+      <div class="calendar-toolbar">
+        <div>
+          <p class="calendar-kicker">Exhibition timing</p>
+          <h2 id="calendar-title">Calendar</h2>
+        </div>
+
+        <div class="calendar-actions">
+          <button id="calendar-prev" type="button" aria-label="Previous month">←</button>
+          <button id="calendar-today" type="button">Today</button>
+          <button id="calendar-next" type="button" aria-label="Next month">→</button>
+        </div>
+      </div>
+
+      <div class="calendar-weekdays" aria-hidden="true">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+        <span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+
+      <section id="calendar-grid" class="calendar-grid" aria-label="Exhibition calendar"></section>
+
+      <section class="upcoming-dates" aria-labelledby="upcoming-dates-title">
+        <div class="upcoming-dates-heading">
+          <div>
+            <p class="calendar-kicker">Chronological view</p>
+            <h3 id="upcoming-dates-title">Upcoming Dates</h3>
+          </div>
+          <span id="upcoming-dates-count" class="upcoming-dates-count"></span>
+        </div>
+        <div id="upcoming-dates-list" class="upcoming-dates-list"></div>
+      </section>
+
+      <section class="calendar-note">
+        Calendar shows opening and closing milestones only. Exhibitions without a finite date remain visible in Upcoming.
+      </section>
+    </section>
+
+    <section id="map-view" class="view-panel" hidden>
+      <div class="map-header">
+        <div>
+          <p class="calendar-kicker">Geographic view</p>
+          <h2>Exhibition map</h2>
+        </div>
+        <p id="map-status" class="map-status"></p>
+      </div>
+
+      <div id="museum-map" class="museum-map" aria-label="Map of museums with tracked exhibitions"></div>
+
+      <section class="map-note">
+        The map currently plots institutions represented in the seed dataset. Trip planning and routing are intentionally deferred.
+      </section>
+    </section>
+  </main>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
