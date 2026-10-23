@@ -691,3 +691,17 @@ button:focus-visible, select:focus-visible, a:focus-visible, #archive-title:focu
 .badge.badge-interested { background: #dbeafe; color: #1e40af; }
 .badge.badge-planning { background: #ede9fe; color: #5b21b6; }
 .badge.badge-archived { background: #e7e5e4; color: #44403c; }
+
+/* Timing groups expand from their own dropdown headings. */
+details.exhibition-group { display: block; }
+details.exhibition-group > summary {
+  list-style: none; cursor: pointer; padding: 18px 20px;
+  background: #fff; border: 1px solid #d9d5cc; border-radius: 12px;
+}
+details.exhibition-group > summary::-webkit-details-marker { display: none; }
+details.exhibition-group > summary:hover { background: #eef2ff; }
+details.exhibition-group > summary:focus-visible { outline: 3px solid #0369a1; outline-offset: 4px; }
+details.exhibition-group[open] > summary { margin-bottom: 16px; background: #e0e7ff; border-color: #818cf8; }
+.group-chevron { margin-left: auto; font-size: 1.4rem; line-height: 1; }
+details.exhibition-group[open] .group-chevron { transform: rotate(180deg); }
+details.exhibition-group:not([open]) > .group-cards { display: none; }

@@ -526,18 +526,27 @@ function renderCard(exhibition) {
   return article;
 }
 
+const expandedGroups = new Set();
+
 function renderGroup(title, exhibitions) {
   if (!exhibitions.length) return null;
 
-  const section = document.createElement("section");
+  const section = document.createElement("details");
   section.className = "exhibition-group";
+  section.open = expandedGroups.has(title);
+  section.addEventListener("toggle", () => {
+    if (!section.isConnected) return;
+    if (section.open) expandedGroups.add(title);
+    else expandedGroups.delete(title);
+  });
 
-  const heading = document.createElement("div");
+  const heading = document.createElement("summary");
   heading.className = "group-heading";
 
   heading.innerHTML = `
     <h2>${title}</h2>
     <span class="count">${exhibitions.length}</span>
+    <span class="group-chevron" aria-hidden="true">⌄</span>
   `;
 
   const cards = document.createElement("div");
