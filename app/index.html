@@ -31,6 +31,16 @@
     <section id="upcoming-view" class="view-panel">
       <section class="filters" aria-label="Exhibition filters">
         <label>
+          <span>Exhibition timing</span>
+          <select id="timing-filter">
+            <option value="all">All exhibition timing</option>
+            <option>Closing Soon</option>
+            <option>Opening Soon</option>
+            <option>Next 3 Months</option>
+            <option>Later</option>
+          </select>
+        </label>
+        <label>
           <span>Category</span>
           <select id="category-filter">
             <option value="all">All categories</option>
@@ -125,6 +135,15 @@
         The map currently plots institutions represented in the seed dataset. Trip planning and routing are intentionally deferred.
       </section>
     </section>
+    <section id="archive-section" class="archive-section" aria-labelledby="archive-title">
+      <div class="group-heading">
+        <h2 id="archive-title" tabindex="-1">Archive</h2>
+        <span id="archive-count" class="count">0</span>
+      </div>
+      <p>Exhibitions marked Not interested. Restore any exhibition to your active radar.</p>
+      <div id="archive-list" class="group-cards"></div>
+    </section>
+    <p id="action-status" class="action-status" role="status" aria-live="polite"></p>
   </main>
 
   <script

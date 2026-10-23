@@ -4,6 +4,10 @@ const listEl = document.querySelector("#exhibition-list");
 const statusEl = document.querySelector("#status");
 const categoryFilter = document.querySelector("#category-filter");
 const distanceFilter = document.querySelector("#distance-filter");
+const timingFilter = document.querySelector("#timing-filter");
+const archiveList = document.querySelector("#archive-list");
+const archiveCount = document.querySelector("#archive-count");
+const actionStatus = document.querySelector("#action-status");
 const statusFilter = document.querySelector("#status-filter");
 const clearFiltersButton = document.querySelector("#clear-filters");
 
@@ -76,7 +80,7 @@ function saveStatus(exhibitionId, status) {
   try {
     const saved = loadSavedStatuses();
 
-    if (!status || status === "None") {
+    if (!status) {
       delete saved[exhibitionId];
     } else {
       saved[exhibitionId] = status;
@@ -108,6 +112,9 @@ function updateExhibitionStatus(exhibitionId, status) {
   saveStatus(exhibitionId, status);
 
   renderUpcoming();
+  actionStatus.textContent = status === "Not interested"
+    ? "Exhibition moved to Archive. You can restore it at the bottom of the page."
+    : "Personal status updated.";
 
   if (!mapView.hidden) {
     renderMap();
@@ -315,6 +322,14 @@ function matchesStatus(exhibition, filterValue) {
   return true;
 }
 
+function isArchived(exhibition) {
+  return exhibition.user_status === "Not interested";
+}
+
+function activeExhibitions() {
+  return allExhibitions.filter((exhibition) => !isArchived(exhibition));
+}
+
 function filterExhibitions(exhibitions) {
   return exhibitions.filter((exhibition) => {
     const categoryMatch =
@@ -327,7 +342,8 @@ function filterExhibitions(exhibitions) {
 
     const statusMatch = matchesStatus(exhibition, statusFilter.value);
 
-    return categoryMatch && distanceMatch && statusMatch;
+    const timingMatch = timingFilter.value === "all" || getGroup(exhibition) === timingFilter.value;
+    return categoryMatch && distanceMatch && statusMatch && timingMatch;
   });
 }
 
@@ -340,9 +356,22 @@ function detailBlock(label, value, full = false) {
   `;
 }
 
+function badgeClass(label) {
+  return ({
+    "Closing soon": "badge-closing",
+    "Tickets available": "badge-tickets",
+    "Unreviewed": "badge-unreviewed",
+    "Interested": "badge-interested",
+    "Planning": "badge-planning",
+    "Attended": "badge-attended",
+    "Not interested": "badge-archived"
+  })[label] || "";
+}
+
 function renderCard(exhibition) {
   const article = document.createElement("article");
   article.className = "exhibition-card";
+  article.dataset.exhibitionId = exhibition.exhibition_id;
 
   const detailId = `details-${exhibition.exhibition_id}`;
 
@@ -363,7 +392,7 @@ function renderCard(exhibition) {
 
   article.innerHTML = `
     <div class="card-topline">
-      ${badges.map((badge) => `<span class="badge${badge === normalizedChangeLabel(exhibition) ? " attention" : ""}">${badge}</span>`).join("")}
+      ${badges.map((badge) => `<span class="badge ${badgeClass(badge)}${badge === normalizedChangeLabel(exhibition) ? " attention" : ""}">${badge}</span>`).join("")}
     </div>
 
     <h3>${exhibition.exhibition_title}</h3>
@@ -396,6 +425,7 @@ function renderCard(exhibition) {
               <option value="Interested"${exhibition.user_status === "Interested" ? " selected" : ""}>Interested</option>
               <option value="Planning"${exhibition.user_status === "Planning" ? " selected" : ""}>Planning</option>
               <option value="Attended"${exhibition.user_status === "Attended" ? " selected" : ""}>Attended</option>
+              <option value="Not interested"${isArchived(exhibition) ? " selected" : ""}>Not interested</option>
             </select>
           </label>
         </div>
@@ -467,10 +497,12 @@ function renderCard(exhibition) {
   }
 
   statusSelect.addEventListener("change", (event) => {
+    const archived = event.target.value === "Not interested";
     updateExhibitionStatus(
       exhibition.exhibition_id,
       event.target.value
     );
+    if (archived) document.querySelector("#archive-title").focus();
   });
 
   toggle.addEventListener("click", () => {
@@ -479,6 +511,18 @@ function renderCard(exhibition) {
     toggle.textContent = expanded ? "Hide details" : "View details";
   });
 
+  if (isArchived(exhibition)) {
+    const restore = document.createElement("button");
+    restore.type = "button";
+    restore.className = "restore-button";
+    restore.textContent = "Restore to radar";
+    restore.addEventListener("click", () => {
+      updateExhibitionStatus(exhibition.exhibition_id, "None");
+      actionStatus.textContent = "Exhibition restored to your active radar.";
+      document.querySelector("#archive-title").focus();
+    });
+    article.append(restore);
+  }
   return article;
 }
 
@@ -505,8 +549,16 @@ function renderGroup(title, exhibitions) {
   return section;
 }
 
+function renderArchive() {
+  const archived = allExhibitions.filter(isArchived);
+  archiveCount.textContent = archived.length;
+  archiveList.replaceChildren(...archived.map(renderCard));
+  if (!archived.length) archiveList.innerHTML = '<div class="empty">No archived exhibitions yet.</div>';
+}
+
 function renderUpcoming() {
-  const exhibitions = filterExhibitions(allExhibitions);
+  renderArchive();
+  const exhibitions = filterExhibitions(activeExhibitions());
 
   const groupOrder = [
     "Closing Soon",
@@ -533,7 +585,7 @@ function renderUpcoming() {
     .map((group) => renderGroup(group, grouped[group]))
     .filter(Boolean);
 
-  statusEl.textContent = `${exhibitions.length} of ${allExhibitions.length} active exhibitions shown`;
+  statusEl.textContent = `${exhibitions.length} of ${activeExhibitions().length} active exhibitions shown`;
 
   if (!sections.length) {
     listEl.innerHTML = '<div class="empty">No exhibitions match the selected filters.</div>';
@@ -559,7 +611,7 @@ function buildCalendarEvents() {
     });
   }
 
-  allExhibitions.forEach((exhibition) => {
+  activeExhibitions().forEach((exhibition) => {
     pushEvent(exhibition.opening_date, exhibition, "Opens");
     pushEvent(exhibition.closing_date, exhibition, "Closes");
   });
@@ -574,7 +626,7 @@ function buildUpcomingMilestones(limit = 12) {
 
   const milestones = [];
 
-  allExhibitions.forEach((exhibition) => {
+  activeExhibitions().forEach((exhibition) => {
     const opening = parseDate(exhibition.opening_date);
     const closing = parseDate(exhibition.closing_date);
 
@@ -733,7 +785,7 @@ function renderCalendar() {
 function groupByInstitution() {
   const grouped = new Map();
 
-  allExhibitions.forEach((exhibition) => {
+  activeExhibitions().forEach((exhibition) => {
     const institution = exhibition.institution_name;
     const location = museumLocations[institution];
 
@@ -891,7 +943,7 @@ async function loadExhibitions() {
   }
 }
 
-[categoryFilter, distanceFilter, statusFilter].forEach((control) => {
+[categoryFilter, distanceFilter, statusFilter, timingFilter].forEach((control) => {
   control.addEventListener("change", renderUpcoming);
 });
 
@@ -899,6 +951,7 @@ clearFiltersButton.addEventListener("click", () => {
   categoryFilter.value = "all";
   distanceFilter.value = "all";
   statusFilter.value = "all";
+  timingFilter.value = "all";
   renderUpcoming();
 });
 

@@ -657,3 +657,37 @@ h1 {
     white-space: normal;
   }
 }
+
+/* Branch test: timing controls, differentiated actions, and personal archive. */
+.filters { grid-template-columns: repeat(4, minmax(0, 1fr)) auto; }
+.card-toggle, .restore-button, .detail-links a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 42px; padding: 9px 14px; border: 1px solid transparent;
+  border-radius: 9px; font-weight: 700; cursor: pointer;
+}
+.card-toggle { background: #1e40af; color: #fff; }
+.card-toggle:hover { background: #1e3a8a; text-decoration: none; }
+.mark-reviewed-button { background: #dcfce7; border-color: #15803d; color: #14532d; }
+.mark-reviewed-button:hover { background: #bbf7d0; border-color: #166534; }
+.detail-links a { background: #ede9fe; border-color: #a78bfa; color: #5b21b6; text-decoration: none; }
+.detail-links a:hover { background: #ddd6fe; text-decoration: underline; }
+.personal-status-control select { border-color: #a16207; background: #fffbeb; color: #713f12; }
+.restore-button { margin: 14px 0 0 10px; background: #ccfbf1; border-color: #0f766e; color: #115e59; }
+.restore-button:hover { background: #99f6e4; }
+.archive-section { margin-top: 56px; padding-top: 28px; border-top: 3px solid #a8a29e; }
+.archive-section > p { color: #52606d; line-height: 1.5; }
+.archive-section .exhibition-card { background: #fafaf9; border-left: 5px solid #78716c; }
+button:focus-visible, select:focus-visible, a:focus-visible, #archive-title:focus {
+  outline: 3px solid #0369a1; outline-offset: 4px;
+}
+.action-status:not(:empty) { padding: 12px; border-radius: 8px; background: #e0f2fe; color: #0c4a6e; }
+[hidden] { display: none !important; }
+@media (max-width: 1000px) { .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .filters { grid-template-columns: 1fr; } }
+
+.badge.badge-closing { background: #fee2e2; color: #991b1b; }
+.badge.badge-tickets, .badge.badge-attended { background: #dcfce7; color: #166534; }
+.badge.badge-unreviewed { background: #fef3c7; color: #92400e; }
+.badge.badge-interested { background: #dbeafe; color: #1e40af; }
+.badge.badge-planning { background: #ede9fe; color: #5b21b6; }
+.badge.badge-archived { background: #e7e5e4; color: #44403c; }
