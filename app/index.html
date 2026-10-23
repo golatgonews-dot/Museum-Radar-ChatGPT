@@ -8,7 +8,7 @@
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIINfQ3yn5ZagEfjh6d/4Esl8GFbR86DGpY="
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
 
@@ -132,8 +132,9 @@
       <div id="museum-map" class="museum-map" aria-label="Map of museums with tracked exhibitions"></div>
 
       <section class="map-note">
-        The map currently plots institutions represented in the seed dataset. Trip planning and routing are intentionally deferred.
+        Map includes all active exhibitions with verified museum coordinates. Any institutions without coordinates are listed below.
       </section>
+      <p id="map-coverage-note" class="map-note" aria-live="polite"></p>
     </section>
     <section id="archive-section" class="archive-section" aria-labelledby="archive-title">
       <div class="group-heading">

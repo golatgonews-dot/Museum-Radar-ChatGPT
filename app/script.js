@@ -38,30 +38,358 @@ let markerLayer = null;
 let calendarCursor = new Date();
 calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
 
+// Museum coordinates checked against OpenStreetMap, October 22, 2026.
 const museumLocations = {
-  "Philadelphia Museum of Art": {
-    lat: 39.9656,
-    lng: -75.1809,
-    city: "Philadelphia",
-    state: "PA"
-  },
-  "Penn Museum": {
-    lat: 39.9494,
-    lng: -75.1917,
-    city: "Philadelphia",
-    state: "PA"
+  "Institute for the Study of the Ancient World (NYU)": {
+    "lat": 40.7799962,
+    "lng": -73.9602106,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/266934250"
   },
   "The Metropolitan Museum of Art": {
-    lat: 40.7794,
-    lng: -73.9632,
-    city: "New York",
-    state: "NY"
+    "lat": 40.7794396,
+    "lng": -73.9633825,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/relation/3698894"
   },
-  "Institute for the Study of the Ancient World (NYU)": {
-    lat: 40.7800,
-    lng: -73.9607,
-    city: "New York",
-    state: "NY"
+  "Penn Museum": {
+    "lat": 39.9492859,
+    "lng": -75.1920297,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/relation/5231601"
+  },
+  "Philadelphia Museum of Art": {
+    "lat": 39.9655661,
+    "lng": -75.1815202,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/28533972"
+  },
+  "Barnes Foundation": {
+    "lat": 39.9605495,
+    "lng": -75.1726581,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/183620616"
+  },
+  "Museum at FIT": {
+    "lat": 40.7466544,
+    "lng": -73.9941473,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/node/3623620317"
+  },
+  "Whitney Museum of American Art": {
+    "lat": 40.7396451,
+    "lng": -74.008921,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/288749896"
+  },
+  "Museum of the City of New York": {
+    "lat": 40.7925266,
+    "lng": -73.951802,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/271220752"
+  },
+  "Cooper Hewitt, Smithsonian Design Museum": {
+    "lat": 40.7842843,
+    "lng": -73.957699,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/266926168"
+  },
+  "National Museum of American History": {
+    "lat": 38.8912397,
+    "lng": -77.0300205,
+    "city": "Washington",
+    "state": "DC",
+    "coordinate_source": "https://www.openstreetmap.org/way/445808462"
+  },
+  "Museum of Fine Arts, Boston": {
+    "lat": 42.3394573,
+    "lng": -71.093897,
+    "city": "Boston",
+    "state": "MA",
+    "coordinate_source": "https://www.openstreetmap.org/relation/63938"
+  },
+  "Science History Institute": {
+    "lat": 39.9491077,
+    "lng": -75.1465328,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/335308190"
+  },
+  "Peabody Essex Museum": {
+    "lat": 42.5215925,
+    "lng": -70.8921931,
+    "city": "Salem",
+    "state": "MA",
+    "coordinate_source": "https://www.openstreetmap.org/way/215901152"
+  },
+  "Musée d’Art Moderne de Paris": {
+    "lat": 48.8643133,
+    "lng": 2.2978602,
+    "city": "Paris",
+    "state": "France",
+    "coordinate_source": "https://www.openstreetmap.org/way/79219308"
+  },
+  "The Amistad Center for Art & Culture / Wadsworth Atheneum": {
+    "lat": 41.7634633,
+    "lng": -72.6729015,
+    "city": "Hartford",
+    "state": "CT",
+    "coordinate_source": "https://www.openstreetmap.org/relation/12429125"
+  },
+  "The Studio Museum in Harlem": {
+    "lat": 40.8084179,
+    "lng": -73.947616,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/node/5420936939"
+  },
+  "Michener Art Museum": {
+    "lat": 40.3085531,
+    "lng": -75.126051,
+    "city": "Doylestown",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/275092258"
+  },
+  "American Swedish Historical Museum": {
+    "lat": 39.9059549,
+    "lng": -75.1809348,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/relation/4141515"
+  },
+  "Charles H. Wright Museum of African American History": {
+    "lat": 42.3591272,
+    "lng": -83.060828,
+    "city": "Detroit",
+    "state": "MI",
+    "coordinate_source": "https://www.openstreetmap.org/way/68957303"
+  },
+  "Museum of the American Revolution": {
+    "lat": 39.9483709,
+    "lng": -75.1458446,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/node/4150740083"
+  },
+  "Brandywine Museum of Art": {
+    "lat": 39.8699798,
+    "lng": -75.593038,
+    "city": "Chadds Ford",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/187353021"
+  },
+  "Delaware Art Museum": {
+    "lat": 39.7655725,
+    "lng": -75.5646368,
+    "city": "Wilmington",
+    "state": "DE",
+    "coordinate_source": "https://www.openstreetmap.org/way/85540782"
+  },
+  "Reading Public Museum": {
+    "lat": 40.3273423,
+    "lng": -75.9513453,
+    "city": "Reading",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/239133425"
+  },
+  "New York Transit Museum": {
+    "lat": 40.6905176,
+    "lng": -73.9899802,
+    "city": "Brooklyn",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/node/368061648"
+  },
+  "Tenement Museum": {
+    "lat": 40.7187837,
+    "lng": -73.9900266,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/node/368061660"
+  },
+  "Museum of Modern Art (MoMA)": {
+    "lat": 40.7616124,
+    "lng": -73.9774992,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/278346578"
+  },
+  "National Museum of Asian Art": {
+    "lat": 38.8881222,
+    "lng": -77.0276002,
+    "city": "Washington",
+    "state": "DC",
+    "coordinate_source": "https://www.openstreetmap.org/relation/1029355"
+  },
+  "National Gallery of Art": {
+    "lat": 38.8913116,
+    "lng": -77.0199045,
+    "city": "Washington",
+    "state": "DC",
+    "coordinate_source": "https://www.openstreetmap.org/way/66418944"
+  },
+  "National Museum of Women in the Arts": {
+    "lat": 38.9000261,
+    "lng": -77.0292709,
+    "city": "Washington",
+    "state": "DC",
+    "coordinate_source": "https://www.openstreetmap.org/node/367144504"
+  },
+  "Library of Congress": {
+    "lat": 38.8886737,
+    "lng": -77.004636,
+    "city": "Washington",
+    "state": "DC",
+    "coordinate_source": "https://www.openstreetmap.org/relation/1029374"
+  },
+  "The People’s House": {
+    "lat": 38.8985861,
+    "lng": -77.039735,
+    "city": "Washington",
+    "state": "DC",
+    "coordinate_source": "https://www.openstreetmap.org/node/687369381"
+  },
+  "Isabella Stewart Gardner Museum": {
+    "lat": 42.338245,
+    "lng": -71.0991538,
+    "city": "Boston",
+    "state": "MA",
+    "coordinate_source": "https://www.openstreetmap.org/way/29650851"
+  },
+  "Weitzman National Museum of American Jewish History": {
+    "lat": 39.9502265,
+    "lng": -75.1484628,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/333012771"
+  },
+  "Fireman’s Hall Museum": {
+    "lat": 39.9532957,
+    "lng": -75.1428054,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/338550400"
+  },
+  "The Morgan Library & Museum": {
+    "lat": 40.7492685,
+    "lng": -73.9814652,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/node/4462440249"
+  },
+  "Brooklyn Museum": {
+    "lat": 40.6709546,
+    "lng": -73.9632948,
+    "city": "Brooklyn",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/1432069915"
+  },
+  "Solomon R. Guggenheim Museum": {
+    "lat": 40.7829932,
+    "lng": -73.958925,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/170149134"
+  },
+  "Institute of Contemporary Art/Boston": {
+    "lat": 42.3528651,
+    "lng": -71.0429628,
+    "city": "Boston",
+    "state": "MA",
+    "coordinate_source": "https://www.openstreetmap.org/way/117888922"
+  },
+  "Shelburne Museum": {
+    "lat": 44.3736821,
+    "lng": -73.2323474,
+    "city": "Shelburne",
+    "state": "VT",
+    "coordinate_source": "https://www.openstreetmap.org/way/188662505"
+  },
+  "MASS MoCA": {
+    "lat": 42.7012857,
+    "lng": -73.1158854,
+    "city": "North Adams",
+    "state": "MA",
+    "coordinate_source": "https://www.openstreetmap.org/way/225074313"
+  },
+  "Baltimore Museum of Art": {
+    "lat": 39.3258182,
+    "lng": -76.6197227,
+    "city": "Baltimore",
+    "state": "MD",
+    "coordinate_source": "https://www.openstreetmap.org/way/114709357"
+  },
+  "Walters Art Museum": {
+    "lat": 39.2970043,
+    "lng": -76.616017,
+    "city": "Baltimore",
+    "state": "MD",
+    "coordinate_source": "https://www.openstreetmap.org/way/1155100625"
+  },
+  "Yale Center for British Art": {
+    "lat": 41.3078959,
+    "lng": -72.9308614,
+    "city": "New Haven",
+    "state": "CT",
+    "coordinate_source": "https://www.openstreetmap.org/way/139753883"
+  },
+  "Carnegie Museum of Art": {
+    "lat": 40.4437092,
+    "lng": -79.9490541,
+    "city": "Pittsburgh",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/way/31899525"
+  },
+  "Dallas Museum of Art": {
+    "lat": 32.7872922,
+    "lng": -96.8004979,
+    "city": "Dallas",
+    "state": "TX",
+    "coordinate_source": "https://www.openstreetmap.org/relation/6942581"
+  },
+  "Museum for Art in Wood": {
+    "lat": 39.9533851,
+    "lng": -75.1448564,
+    "city": "Philadelphia",
+    "state": "PA",
+    "coordinate_source": "https://www.openstreetmap.org/node/12235452452"
+  },
+  "Beinecke Rare Book & Manuscript Library": {
+    "lat": 41.3115974,
+    "lng": -72.9273243,
+    "city": "New Haven",
+    "state": "CT",
+    "coordinate_source": "https://www.openstreetmap.org/way/114134159"
+  },
+  "Hirshhorn Museum and Sculpture Garden": {
+    "lat": 38.8881647,
+    "lng": -77.023257,
+    "city": "Washington",
+    "state": "DC",
+    "coordinate_source": "https://www.openstreetmap.org/relation/3374667"
+  },
+  "State Historical Society of Missouri": {
+    "lat": 38.9488319,
+    "lng": -92.3303585,
+    "city": "Columbia",
+    "state": "MO",
+    "coordinate_source": "https://www.openstreetmap.org/way/547545610"
+  },
+  "New York Transit Museum Grand Central Gallery": {
+    "lat": 40.7526944,
+    "lng": -73.977253,
+    "city": "New York",
+    "state": "NY",
+    "coordinate_source": "https://www.openstreetmap.org/way/265947358",
+    "location_note": "Terminal building location; gallery is in the Shuttle Passage."
   }
 };
 
@@ -368,10 +696,14 @@ function badgeClass(label) {
   })[label] || "";
 }
 
+const expandedCards = new Set();
+
 function renderCard(exhibition) {
   const article = document.createElement("article");
   article.className = "exhibition-card";
   article.dataset.exhibitionId = exhibition.exhibition_id;
+  const initiallyExpanded = expandedCards.has(exhibition.exhibition_id);
+  if (initiallyExpanded) article.classList.add("expanded");
 
   const detailId = `details-${exhibition.exhibition_id}`;
 
@@ -404,10 +736,10 @@ function renderCard(exhibition) {
     <button
       class="card-toggle"
       type="button"
-      aria-expanded="false"
+      aria-expanded="${initiallyExpanded ? "true" : "false"}"
       aria-controls="${detailId}"
     >
-      View details
+      ${initiallyExpanded ? "Hide details" : "View details"}
     </button>
 
     <div class="card-details" id="${detailId}">
@@ -493,6 +825,9 @@ function renderCard(exhibition) {
   if (markReviewedButton) {
     markReviewedButton.addEventListener("click", () => {
       markExhibitionReviewed(exhibition.exhibition_id);
+      const updatedCard = [...document.querySelectorAll(".exhibition-card")]
+        .find((card) => card.dataset.exhibitionId === String(exhibition.exhibition_id));
+      if (updatedCard) updatedCard.querySelector(".card-toggle").focus();
     });
   }
 
@@ -502,11 +837,19 @@ function renderCard(exhibition) {
       exhibition.exhibition_id,
       event.target.value
     );
-    if (archived) document.querySelector("#archive-title").focus();
+    if (archived) {
+      document.querySelector("#archive-title").focus();
+    } else {
+      const updatedControl = [...document.querySelectorAll(".personal-status-select")]
+        .find((control) => control.dataset.exhibitionId === String(exhibition.exhibition_id));
+      if (updatedControl) updatedControl.focus();
+    }
   });
 
   toggle.addEventListener("click", () => {
     const expanded = article.classList.toggle("expanded");
+    if (expanded) expandedCards.add(exhibition.exhibition_id);
+    else expandedCards.delete(exhibition.exhibition_id);
     toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
     toggle.textContent = expanded ? "Hide details" : "View details";
   });
@@ -533,6 +876,7 @@ function renderGroup(title, exhibitions) {
 
   const section = document.createElement("details");
   section.className = "exhibition-group";
+  section.dataset.group = title;
   section.open = expandedGroups.has(title);
   section.addEventListener("toggle", () => {
     if (!section.isConnected) return;
@@ -566,6 +910,10 @@ function renderArchive() {
 }
 
 function renderUpcoming() {
+  listEl.querySelectorAll("details.exhibition-group").forEach((group) => {
+    if (group.open) expandedGroups.add(group.dataset.group);
+    else expandedGroups.delete(group.dataset.group);
+  });
   renderArchive();
   const exhibitions = filterExhibitions(activeExhibitions());
 
@@ -833,6 +1181,7 @@ function popupHtml(group) {
     <div class="map-popup">
       <h3>${group.institution}</h3>
       <p>${group.location.city}, ${group.location.state}</p>
+      ${group.location.location_note ? `<p>${group.location.location_note}</p>` : ""}
       <ul>${items}</ul>
     </div>
   `;
@@ -855,7 +1204,7 @@ function renderMap() {
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
         maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors"
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
       }
     ).addTo(museumMap);
 
@@ -870,7 +1219,7 @@ function renderMap() {
     const marker = L.marker([
       group.location.lat,
       group.location.lng
-    ]);
+    ], { title: group.institution, alt: group.institution });
 
     marker.bindPopup(popupHtml(group));
     marker.addTo(markerLayer);
@@ -896,11 +1245,17 @@ function renderMap() {
   );
 
   mapStatus.textContent =
-    `${institutions.length} institutions · ${exhibitionCount} exhibitions`;
+    `${institutions.length} institutions · ${exhibitionCount} of ${activeExhibitions().length} active exhibitions mapped`;
+  const unmapped = [...new Set(activeExhibitions()
+    .filter((exhibition) => !museumLocations[exhibition.institution_name])
+    .map((exhibition) => exhibition.institution_name))];
+  document.querySelector("#map-coverage-note").textContent = unmapped.length
+    ? `Not mapped (location needed): ${unmapped.join("; ")}. These exhibitions remain in Upcoming and Calendar.`
+    : "All active exhibitions have museum locations. Museum pins group exhibitions at the same institution.";
 
-  setTimeout(() => {
+  requestAnimationFrame(() => {
     museumMap.invalidateSize();
-  }, 50);
+  });
 }
 
 function switchView(viewName) {

@@ -705,3 +705,7 @@ details.exhibition-group[open] > summary { margin-bottom: 16px; background: #e0e
 .group-chevron { margin-left: auto; font-size: 1.4rem; line-height: 1; }
 details.exhibition-group[open] .group-chevron { transform: rotate(180deg); }
 details.exhibition-group:not([open]) > .group-cards { display: none; }
+
+/* Allow native selects to shrink within narrow mobile filter columns. */
+.filters label, .personal-status-control { min-width: 0; }
+.filters select, .personal-status-control select { min-width: 0; width: 100%; max-width: 100%; }
